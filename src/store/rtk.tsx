@@ -1,0 +1,196 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+const BASE_URL = "http://192.168.18.240:5000/api/v1/";
+export const Images_URL = "http://192.168.18.240:5000/public/";
+const endpoints = {
+  register: "auth/register",
+  login: "auth/login",
+  dishImage: "menu/dishimage",
+  addDish: "menu/",
+  addCategory: "menu/category",
+  QRCOde:"qrcode",
+  notification:"notification",
+  order:"order"
+};
+
+export const tableOder = createApi({
+  reducerPath: "tableOrder",
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers, { getState }: any) => {
+      const token = getState().auth.token;
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ["refetchAllDishes","refetchAllCategory", "refetchAllQRCode","refetchAllnotification", "refetchAllOrders"  ],
+  keepUnusedDataFor: 60,
+  refetchOnFocus: true, 
+  refetchOnReconnect: true, 
+  refetchOnMountOrArgChange: true, 
+  endpoints: (builder) => ({
+    signup: builder.mutation({
+      query: (data) => ({
+        url: endpoints.register,
+        method: "post",
+        body: data,
+      }),
+    }),
+    login: builder.mutation({
+      query: (data) => ({
+        url: endpoints.login,
+        method: "post",
+        body: data,
+      }),
+    }),
+    // Dish
+    uploadDishImage: builder.mutation<{}, FormData>({
+      query: (data) => ({
+        url: endpoints.dishImage,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    addDish: builder.mutation({
+      query: (data) => ({
+        url: endpoints.addDish,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllDishes"]
+    }),
+    updateDish: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.addDish}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllDishes"]
+    }),
+    getAllDish:  builder.query({
+      query: () => endpoints.addDish,
+      providesTags : ["refetchAllDishes"],
+    }),
+    // Category
+    getAllCategory:  builder.query({
+      query: () => endpoints.addCategory,
+      providesTags : ["refetchAllCategory"],
+    }),
+    addCategory: builder.mutation({
+      query: (data) => ({
+        url: endpoints.addCategory,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllCategory"]
+    }),
+    updateCategory: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.addCategory}/${data?.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllCategory"]
+    }),
+    deleteCategory: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.addCategory}/${data?.id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags:["refetchAllCategory"]
+    }),
+    // QRCode
+    createQR: builder.mutation({
+      query: (data) => ({
+        url: endpoints.QRCOde,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllQRCode"]
+    }),
+    getAllQRCode:  builder.query({
+      query: () => endpoints.QRCOde,
+      providesTags : ["refetchAllQRCode"],
+    }),
+    updateQRCode: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.QRCOde}/${data?.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllQRCode"]
+    }),
+    deleteQRCode: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.QRCOde}/${data?.id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags:["refetchAllQRCode"]
+    }),
+    // Notification
+    addNotification: builder.mutation({
+      query: (data) => ({
+        url: endpoints.notification,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllnotification"]
+    }),
+    getAllNotification:  builder.query({
+      query: () => endpoints.notification,
+      providesTags : ["refetchAllnotification"],
+    }),
+    // Order 
+    addOrder: builder.mutation({
+      query: (data) => ({
+        url: endpoints.order,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllOrders"]
+    }),
+    getAllOrders:  builder.query({
+      query: () => endpoints.order,
+      providesTags : ["refetchAllOrders"],
+    }),
+    updateOrder: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.order}/${data?.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllOrders"]
+    }),
+  }),
+  
+});
+
+export const {
+  //auth
+  useSignupMutation,
+  useLoginMutation,
+  // dish
+  useUploadDishImageMutation,
+  useAddDishMutation,
+  useUpdateDishMutation,
+  useGetAllDishQuery,
+  // category
+  useAddCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetAllCategoryQuery,
+  useUpdateCategoryMutation,
+  // QRcode
+  useCreateQRMutation,
+  useGetAllQRCodeQuery,
+  useUpdateQRCodeMutation,
+  useDeleteQRCodeMutation,
+  // Notification
+  useAddNotificationMutation,
+  useGetAllNotificationQuery,
+  // Orders
+  useAddOrderMutation,
+  useGetAllOrdersQuery,
+  useUpdateOrderMutation
+} = tableOder;

@@ -24,7 +24,46 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+
+    <title>Table Order App</title>
+
+    <style>
+ 
+      html {
+        height: 100%;
+        -webkit-overflow-scrolling: touch;
+      }
+      body,
+      #root,
+      #root__layout {
+        display: flex;
+        flex: 1 1 auto;
+        min-height: 100%;
+        flex-direction: column;
+        /* background-color: #f0f8ff; */
+      }
+      img {
+        max-width: 100%;
+        vertical-align: middle;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: none;
+      }
+      input[type="number"]::-webkit-outer-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+      }
+      input[type="number"]::-webkit-inner-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
