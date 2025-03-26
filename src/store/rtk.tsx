@@ -10,7 +10,9 @@ const endpoints = {
   addCategory: "menu/category",
   QRCOde:"qrcode",
   notification:"notification",
-  order:"order"
+  order:"order",
+  user:"user/",
+  avatar:"user/avatar/"
 };
 
 export const tableOder = createApi({
@@ -25,7 +27,7 @@ export const tableOder = createApi({
       return headers;
     },
   }),
-  tagTypes: ["refetchAllDishes","refetchAllCategory", "refetchAllQRCode","refetchAllnotification", "refetchAllOrders"  ],
+  tagTypes: ["refetchAllDishes","refetchAllCategory", "refetchAllQRCode","refetchAllnotification", "refetchAllOrders","refetchuser"  ],
   keepUnusedDataFor: 60,
   refetchOnFocus: true, 
   refetchOnReconnect: true, 
@@ -163,6 +165,27 @@ export const tableOder = createApi({
       }),
       invalidatesTags:["refetchAllOrders"]
     }),
+
+    getUser:  builder.query({
+      query: () => endpoints.user,
+      providesTags : ["refetchuser"],
+    }),
+    updateUser: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.user}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchuser"]
+    }),
+     // user avatar
+     uploadAvatar: builder.mutation<{}, FormData>({
+      query: (data) => ({
+        url: endpoints.avatar,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
   
 });
@@ -192,5 +215,9 @@ export const {
   // Orders
   useAddOrderMutation,
   useGetAllOrdersQuery,
-  useUpdateOrderMutation
+  useUpdateOrderMutation,
+  //user
+  useGetUserQuery,
+  useUpdateUserMutation,
+  useUploadAvatarMutation
 } = tableOder;

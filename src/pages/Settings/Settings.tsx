@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Avatar,
@@ -10,20 +10,25 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import UserAvatar from "../../component/UserAvatar/UserAvatar";
+import { Images_URL, useGetUserQuery, useUpdateUserMutation, useUploadAvatarMutation } from "../../store/rtk";
+import { errorHandler } from "../../utils/helper/errorHandler";
+import { toast } from "react-toastify";
 const dummy = require("../../Assets/Images/dumySettings.png");
 
 const Settings = () => {
   const [value, setValue] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     fullName: "",
     email: "",
     username: "",
     phone: "",
     personalInfo: "",
+
   });
+  const [userID,setUserId] = useState<any>(null)
+  const [avatar,setAvatar] = useState<any>(null)
   const [Image, setImage] = useState<any>(null);
   const [files, setFiles] = useState(null);
-  console.log(files)
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleClick = () => {
     if (inputRef.current) {
@@ -39,6 +44,7 @@ const Settings = () => {
         setImage(e.target.result);
       };
       reader.readAsDataURL(e.target.files[0]);
+      handleAvatar(e)
   };
 }
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -50,11 +56,10 @@ const Settings = () => {
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
   };
 
-  const handleSubmit = () => {
-    console.log(formData);
-  };
+ 
 
   const handleReset = () => {
     setFormData({
@@ -65,7 +70,52 @@ const Settings = () => {
       personalInfo: "",
     });
   };
+  const {data} = useGetUserQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+  const [udpateUser,{isLoading}] = useUpdateUserMutation()
+  const [uploadAvatar] = useUploadAvatarMutation()
+  useEffect(()=>{
+    if(data && data.user){
+      setUserId(data?.user?.uuid)
+      setFormData({
+        fullName: data.user.name || "",  
+        email: data.user.email || "",
+        username:data.user.usertype || "", 
+        phone: data.user.phonenumber || "",
+        personalInfo: data.user.personal_info || "",
+      });
+      setAvatar(data.user.avatar || null)
+    }
+  },[data])
+  const handleUpdateApi=async()=>{
+    try{
+      const payload = {
+        name:formData.name,
+        personal_info:formData.personalInfo,
+        phonenumber:formData.phone,
+        avatar:avatar
+      }
+      const res = await udpateUser(payload).unwrap()
+      if(res.user){
 
+        toast("User update successfully.")
+      }
+    }catch(error){
+      errorHandler(error)
+    }
+  }
+  const handleAvatar=async (event:any)=>{
+      const formData = new FormData();
+      formData.append("image", event.target.files[0]);
+      try {
+        const response = await uploadAvatar(formData).unwrap() as any
+        if(response && response?.status === "success"){
+          setAvatar(response.image)
+        }
+      } catch (error) {
+        errorHandler(error)
+      }
+  }
+  const userimage = Images_URL+"avatar/"+userID+"/"+avatar
   return (
     <Box sx={{ padding: 2, bgcolor: "#fff" }}>
       <Box display={"flex"} justifyContent={"space-between"} mx={1}>
@@ -103,7 +153,7 @@ const Settings = () => {
             style={{ display: "none" }}
           />
           <Avatar
-            src={Image?Image:dummy}
+            src={avatar?userimage:Image?Image:dummy}
             sx={{ width: 100, height: 100, bgcolor: "#e0e0e0", borderRadius: 1 }}
             onClick={handleClick}
           />
@@ -140,6 +190,7 @@ const Settings = () => {
               Email
             </Typography>
             <TextField
+            disabled
               fullWidth
               name="email"
               sx={{ bgcolor: "#EBEBEB", borderRadius: 1 }}
@@ -153,9 +204,10 @@ const Settings = () => {
           {/* Username */}
           <Box>
             <Typography color="text" variant="body2" fontSize={12} ml={0.2}>
-              Username
+              User Type
             </Typography>
             <TextField
+              disabled
               fullWidth
               name="username"
               sx={{ bgcolor: "#EBEBEB", borderRadius: 1 }}
@@ -211,7 +263,7 @@ const Settings = () => {
         {/* Buttons */}
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button
-            onClick={handleSubmit}
+            onClick={handleUpdateApi}
             sx={{
               bgcolor: "#946c17",
               color: "white",

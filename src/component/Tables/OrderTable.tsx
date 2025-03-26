@@ -45,17 +45,17 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
 
   useEffect(() => {
     if (pathname==="/Orders") {
-      const filteredOrders = orders?.filter((order) =>
-        order?.name.includes(search)
+      const filteredOrders = order?.filter((order) =>
+        order?.order_detail?.includes(search)
       ) || [];
       setFilterData(filteredOrders);
     } else {
-      const filteredOrders = orders?.filter((order) =>
-        order?.id.includes(search)
+      const filteredOrders = order?.filter((order) =>
+        order?.uuid?.includes(search)
       ) || [];
       setFilterData(filteredOrders);
     }
-  }, [search, orders]);
+  }, [search, order]);
 
   const handleOpenMenu = (
     event: React.MouseEvent<HTMLElement>,
@@ -69,8 +69,8 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
     setAnchorEl(null);
   };
   const handleChanegStatus = (status: string) => {
-    const updatedOrders = orders?.map((order) => {
-      if (order.id === selectedOrder?.id) {
+    const updatedOrders = order?.map((order) => {
+      if (order.uuid === selectedOrder?.uuid) {
         return { ...order, status: status };
       }
       return order;
@@ -101,7 +101,7 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
   
   const handleDateApply = () => {
     if (startDate && endDate) {
-      const filteredData = orders?.filter((order) => {
+      const filteredData = order?.filter((order) => {
         const orderDate = new Date(order?.date);
         return orderDate >= startDate && orderDate <= endDate;
       }) ?? [];
@@ -236,13 +236,13 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
                         m: 0,
                       }}
                     >
-                      {order?.id}
+                      #{order?.uuid}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
-                      {order?.name}
+                      {order?.order_detail}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
-                      {order?.detail}
+                      Table No {order?.table_no}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
                       {order?.amount}
@@ -252,7 +252,7 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
                         label={order?.status}
                         sx={{
                           backgroundColor:
-                            order?.status === "Ready" ? "#a67c00":order?.status === "Complete"?"#a67c00" : "#DDCD9F",
+                          order?.status === "Ready" ? "#a67c00":order?.status === "Complete"?"#a67c00" : "#DDCD9F",
                           color: order?.status === "Ready" ? "#fff":order?.status === "Complete"?"#fff" : "#000",
                           fontWeight: 400,
                         }}

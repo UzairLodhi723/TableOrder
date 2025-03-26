@@ -17,10 +17,10 @@ interface Orderprops {
   data?: any;
 }
 const OrderDetails: React.FC<Orderprops> = ({ setOpen, data }) => {
-  console.log(data,'i am data')
+  console.log(data, 'i am data')
   const handleClose = () => setOpen();
   const pathname = window.location.pathname
-  console.log(pathname,"path")
+  console.log(pathname, "path")
   return (
     <Box
       sx={{
@@ -60,9 +60,9 @@ const OrderDetails: React.FC<Orderprops> = ({ setOpen, data }) => {
             <TableRow>
               {
                 pathname == "/Payments" &&
-              <TableCell>
-                <strong>Timestamp</strong>
-              </TableCell>
+                <TableCell>
+                  <strong>Timestamp</strong>
+                </TableCell>
               }
               <TableCell>
                 <strong>Order ID</strong>
@@ -82,10 +82,10 @@ const OrderDetails: React.FC<Orderprops> = ({ setOpen, data }) => {
             <TableRow>
               {
                 pathname == "/Payments" &&
-              <TableCell>{data?.date}</TableCell>
+                <TableCell>{data?.date}</TableCell>
               }
-              <TableCell>{data?.id}</TableCell>
-              <TableCell>{data?.name}</TableCell>
+              <TableCell>#{data?.uuid}</TableCell>
+              <TableCell>Table No {data?.table_no}</TableCell>
               <TableCell>{data?.amount}</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>{data?.status}</TableCell>
             </TableRow>
@@ -95,69 +95,88 @@ const OrderDetails: React.FC<Orderprops> = ({ setOpen, data }) => {
       {
         pathname == "/Orders" &&
         <Box>
-      <Typography variant="caption" color="grey">
-        Items
-      </Typography>
-      <TableContainer
-        sx={{
-          border: " 1px solid rgba(232, 241, 253, 1)",
-          borderRadius: 1,
-          mb: 4,
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>Items</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Amount</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>{data?.detail}</TableCell>
-              <TableCell>{data?.dishAmount}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Typography variant="caption" color="grey">
-        Add-Ons
-      </Typography>
-      <TableContainer
-        sx={{
-          border: " 1px solid rgba(232, 241, 253, 1)",
-          borderRadius: 1,
-          mb: 4,
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>Add-on Items</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Amount</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-              {data?.addOns?.length>0 &&
-              data?.addOns.map((item:any) =>{
-                return (
-            <TableRow>
-                  <TableCell>{item?.name}</TableCell>
-                  <TableCell>{item?.price}</TableCell>
-            </TableRow>
-                )
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          <Typography variant="caption" color="grey">
+            Items
+          </Typography>
+          <TableContainer
+            sx={{
+              border: " 1px solid rgba(232, 241, 253, 1)",
+              borderRadius: 1,
+              mb: 4,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <strong>Items</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Amount</strong>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  data?.orderItems?.map((item: any, index: any) => {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>{item?.name}</TableCell>
+                        <TableCell>{item?.amount}</TableCell>
+                      </TableRow>
+                    )
+                  })
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Typography variant="caption" color="grey">
+            Add-Ons
+          </Typography>
+          <TableContainer
+            sx={{
+              border: " 1px solid rgba(232, 241, 253, 1)",
+              borderRadius: 1,
+              mb: 4,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <strong>Add-on Items</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Amount</strong>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  data?.orderItems?.map((item:any,index:any)=>{
+                    return (item?.itemAddOns?.map((add:any,index:any)=>{
+                      return(
+                        <TableRow key={index}>
+                        <TableCell>{add?.addons_name}</TableCell>
+                        <TableCell>{add?.amount}</TableCell>
+                      </TableRow>
+                      )
+                    })
+                  )
+                  })
+                }
+                {/* {data?.addOns?.length > 0 &&
+                  data?.addOns.map((item: any) => {
+                    return (
+                      <TableRow>
+                        <TableCell>{item?.name}</TableCell>
+                        <TableCell>{item?.price}</TableCell>
+                      </TableRow>
+                    )
+                  })} */}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       }
     </Box>

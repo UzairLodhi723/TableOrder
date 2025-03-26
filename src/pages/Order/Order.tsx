@@ -8,6 +8,8 @@ import Grid from "@mui/material/Grid2";
 import SearchIcon from "@mui/icons-material/Search";
 import UserAvatar from "../../component/UserAvatar/UserAvatar";
 import OrderTable from "../../component/Tables/OrderTable";
+import { useGetAllOrdersQuery } from "../../store/rtk";
+import { useEffect, useState } from "react";
 const orders = [
   {
     id: "#5644",
@@ -62,7 +64,15 @@ const orders = [
   
 ];
 const Order = () => {
-  
+  const {data} = useGetAllOrdersQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+  const [allorder,setAllOrder] = useState([])
+  useEffect(()=>{
+    if(data){
+      setAllOrder(data.orderlist)
+      console.log("data",data)
+    }
+  },[data])
+
   return (
     <Box sx={{ padding: 2, bgcolor: "#fff" }}>
       <Box display={"flex"} justifyContent={"space-between"} mx={1}>
@@ -99,7 +109,7 @@ const Order = () => {
           Orders
         </Typography>
       </Box>
-      <OrderTable order={orders} orderhead={["Order ID"," Name","Order Detail"," Total amount","Status"]}/>
+      <OrderTable order={allorder} orderhead={["Order ID"," Name","Table No","Total amount","Status","Action"]}/>
     </Box>
   );
 };
