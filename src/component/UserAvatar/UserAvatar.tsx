@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -9,9 +9,10 @@ import {
 } from "@mui/material";
 import { useRouter } from "../../utils/hooks/use-router";
 import { usePathname } from "../../utils/hooks/use-pathname";
+import { Images_URL, useGetUserQuery } from "../../store/rtk";
 const userImg = require("../../Assets/userImage.jpeg");
 
-const data = [
+const dataOptions = [
   {
     label: "Settings",
     href: "/Settings",
@@ -23,6 +24,16 @@ const data = [
 ];
 
 const UserAvatar = () => {
+  const {data} = useGetUserQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+  const [avatar,setAvatar] = useState<any>(null)
+    const [userID,setUserId] = useState<any>(null)
+    useEffect(()=>{
+      if(data && data.user){
+        setUserId(data?.user?.uuid)
+        setAvatar(data.user.avatar || null)
+        console.log(data.user.avatar,"data.user.avatar")
+      }
+    },[data])
   const router = useRouter();
   const pathname = usePathname();
 
@@ -48,7 +59,7 @@ const UserAvatar = () => {
     },
     [handleClosePopover, router]
   );
-
+  const userimage = Images_URL+"avatar/"+userID+"/"+avatar
   return (
     <>
       <Box
@@ -61,7 +72,7 @@ const UserAvatar = () => {
         <Typography variant="body2" fontWeight={"bold"}>
           <span style={{ fontWeight: "400" }}>Hello,</span> Admin
         </Typography>
-        <Avatar src={userImg} sx={{ ml: 2 }} />
+        <Avatar src={userimage?userimage:userImg} sx={{ ml: 2 }} />
       </Box>
       <Popover
         open={!!openPopover}
@@ -85,7 +96,7 @@ const UserAvatar = () => {
             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           }}
         >
-          {data.map((option) => (
+          {dataOptions.map((option) => (
             <MenuItem
               key={option.label}
               selected={option.href === pathname}

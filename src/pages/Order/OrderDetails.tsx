@@ -82,12 +82,12 @@ const OrderDetails: React.FC<Orderprops> = ({ setOpen, data }) => {
             <TableRow>
               {
                 pathname == "/Payments" &&
-                <TableCell>{data?.date}</TableCell>
+                <TableCell>{data?.created_At}</TableCell>
               }
-              <TableCell>#{data?.uuid}</TableCell>
+              <TableCell>#{data?.orderId}</TableCell>
               <TableCell>Table No {data?.table_no}</TableCell>
-              <TableCell>{data?.amount}</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>{data?.status}</TableCell>
+              <TableCell>{data?.total_amount}</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>{data?.payment_status}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

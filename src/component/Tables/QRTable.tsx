@@ -103,10 +103,6 @@ const QRTable: React.FC<QRProps> = ({ orderhead }) => {
     }
   };
   const handleDelete = async () => {
-    console.log({
-      id: selectedOrder?.uuid,
-      status: selectedOrder?.status =="active"?"inactive":"active",
-    })
     try {
       const response = await deleteQRCode({
         id: selectedOrder?.uuid

@@ -47,8 +47,6 @@ const AddCategory: React.FC<propsCategory> = ({ categorie, setCategorie }) => {
           console.error("Upload Failed", error);
           errorHandler(error)
         }
-    // addCategory({ category: newCategory })
-    // setCategorie([...categorie, newCategory]);
     setNewCategory("");
   };
   const handleDeleteCategory = async(index: number) => {

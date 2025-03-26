@@ -7,7 +7,9 @@ import {
 import Grid from "@mui/material/Grid2";
 import SearchIcon from "@mui/icons-material/Search";
 import UserAvatar from "../../component/UserAvatar/UserAvatar";
-import OrderTable from "../../component/Tables/OrderTable";
+import PaymentTable from "../../component/Tables/PaymentTable";
+import { useGetAllPaymentQuery } from "../../store/rtk";
+import { useEffect, useState } from "react";
 const orders = [
   {
     id: "#5644",
@@ -52,6 +54,15 @@ const orders = [
   
 ];
 const Payment = () => {
+  const {data} = useGetAllPaymentQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+  console.log(data,"dat")
+  const [allorder,setAllOrder] = useState([])
+    useEffect(()=>{
+      if(data){
+        setAllOrder(data.paymentlist)
+        console.log("data",data)
+      }
+    },[data])
   return (
     <Box sx={{ padding: 2, bgcolor: "#fff" }}>
     <Box display={"flex"} justifyContent={"space-between"} mx={1}>
@@ -88,7 +99,7 @@ const Payment = () => {
         Orders
       </Typography>
     </Box>
-    <OrderTable order={orders} orderhead={["Order ID"," Customer Name","Payment Way"," Total amount","Payment Status"]}/>
+    <PaymentTable order={allorder} orderhead={["Order ID"," Customer Name","Payment Way"," Total amount","Payment Status"]}/>
   </Box>
   )
 }

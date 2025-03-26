@@ -58,16 +58,16 @@ const PaymentScreen = () => {
       try {
         const payload = {
           table_no:tableNo,
-          totalamount:state,
+          totalamount:state.toString(),
           customer_name:Name,
           payment_way:selectedCard,
-          items:[
-            
-          ],
+          items:cartData,
         };
+        console.log(payload,"payload")
         const response = await addOrder(payload).unwrap() as any;
         if (response && response?.status === "success") {
           ShowToast("Order Placed sucessfully");
+          localStorage.removeItem("")
         }
       } catch (error) {
         console.error("Upload Failed", error);

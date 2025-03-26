@@ -11,6 +11,7 @@ const endpoints = {
   QRCOde:"qrcode",
   notification:"notification",
   order:"order",
+  payment:"order/payment",
   user:"user/",
   avatar:"user/avatar/"
 };
@@ -185,6 +186,19 @@ export const tableOder = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags:["refetchuser"]
+    }),
+    getAllPayment:  builder.query({
+      query: () => endpoints.payment,
+      providesTags : ["refetchAllOrders"],
+    }),
+    updatePayment: builder.mutation({
+      query: (data) => ({
+        url: `${endpoints.payment}/${data?.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags:["refetchAllOrders"]
     }),
   }),
   
@@ -216,6 +230,9 @@ export const {
   useAddOrderMutation,
   useGetAllOrdersQuery,
   useUpdateOrderMutation,
+  // Payment
+  useGetAllPaymentQuery,
+  useUpdatePaymentMutation,
   //user
   useGetUserQuery,
   useUpdateUserMutation,

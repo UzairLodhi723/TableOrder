@@ -26,7 +26,7 @@ import { useLocation } from "react-router-dom";
 import OrderDetails from "../../pages/Order/OrderDetails";
 import DateRangePicker from "../DateRange/DateRangePicker";
 import { format } from 'date-fns';
-import { useUpdateOrderMutation } from "../../store/rtk";
+import { useUpdateOrderMutation, useUpdatePaymentMutation } from "../../store/rtk";
 import { ShowToast } from "../ShowToast";
 import { errorHandler } from "../../utils/helper/errorHandler";
 interface OrderProps {
@@ -34,8 +34,9 @@ interface OrderProps {
   order?: any[];
 }
 const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
-  const [updateOrder] = useUpdateOrderMutation()
+  const [updateOrder] = useUpdatePaymentMutation()
   const [orders, setorders] = useState(order);
+  console.log(orders)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [rowPerPage, setRowPerPage] = useState<number>(5);
@@ -48,17 +49,10 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
   const {pathname} = useLocation()
   useEffect(() => {
     setorders(order)
-    if (pathname==="/Orders") {
       const filteredOrders = orders?.filter((order) =>
-        order?.table_no?.includes(search)
+        order?.orderId?.includes(search)
       ) || [];
       setFilterData(filteredOrders);
-    } else {
-      const filteredOrders = orders?.filter((order) =>
-        order?.uuid?.includes(search)
-      ) || [];
-      setFilterData(filteredOrders);
-    }
   }, [search, order, orders]);
 
   const handleOpenMenu = (
@@ -73,11 +67,10 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
     setAnchorEl(null);
   };
   const handleChanegStatus = async(status: string) => {
-    if(pathname==="/Orders"){
        try {
         const payload = {
-          id: Number(selectedOrder?.uuid),
-          order_status: status === "In Progress"?"inprogress":"ready"
+          id:selectedOrder?.uuid,
+          payment_status: status === "Pending"?"pending":"complete"
         }
         console.log(payload,"pay")
             const response = await updateOrder(payload).unwrap() as any;
@@ -89,7 +82,6 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
             console.error("Upload Failed", error);
             errorHandler(error);
           }
-      }
     handleCloseMenu()
     setShowSubMenu(false)
   };
@@ -248,24 +240,24 @@ const OrderTable: React.FC<OrderProps> = ({ orderhead, order }) => {
                         m: 0,
                       }}
                     >
-                      #{order?.uuid}
+                      #{order?.orderId}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
-                      {order?.order_detail}
+                      {order?.customer_name}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
-                      Table No {order?.table_no}
+                    {order?.payment_way}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
-                      {order?.amount}
+                     RS: {order?.total_amount}
                     </TableCell>
                     <TableCell sx={{ py: 0.8, color: "grey" }}>
                       <Chip
-                        label={order?.status}
+                        label={order?.payment_status}
                         sx={{
                           backgroundColor:
-                          order?.status === "ready" ? "#a67c00":order?.status === "Complete"?"#a67c00" : "#DDCD9F",
-                          color: order?.status === "ready" ? "#fff":order?.status === "Complete"?"#fff" : "#000",
+                          order?.payment_status === "complete" ? "#a67c00": "#DDCD9F",
+                          color: order?.payment_status === "complete" ? "#fff": "#000",
                           fontWeight: 400,
                         }}
                       />
