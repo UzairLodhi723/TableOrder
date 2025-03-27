@@ -25,6 +25,7 @@ export type NavContentProps = {
   data: {
     path?: string;
     title: string;
+    show?:boolean;
     icon?: React.ReactNode;
     info?: React.ReactNode;
   }[];

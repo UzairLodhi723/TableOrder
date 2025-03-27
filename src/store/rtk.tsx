@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = "http://192.168.18.240:5000/api/v1/";
+// const BASE_URL = "http://192.168.18.240:5000/api/v1/";
+const BASE_URL = "http://34.28.168.5/order/api/v1/";
 export const Images_URL = "http://192.168.18.240:5000/public/";
 const endpoints = {
   register: "auth/register",

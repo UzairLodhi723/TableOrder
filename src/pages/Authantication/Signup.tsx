@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Typography, Paper } from "@mui/material";
+import { Button, Typography, Paper, Select } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import LeftBox from "./LeftBox";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,6 +14,7 @@ import { RestaurantSignup } from "../../Assets/Icons/Icons";
 import { resAPI } from "../../utils/hooks/apiResponse";
 import { useSignupMutation } from "../../store/rtk";
 import { useNavigate } from "react-router-dom";
+import { MenuItem } from "@mui/material";
 
 interface FormValues {
   name: string;
@@ -23,16 +24,17 @@ interface FormValues {
   restaurantName: string;
   branchName: string;
   city: string;
+  type: string;
   submit: null;
 }
 const SignUp: React.FC = () => {
-  const [createSignUp,{isLoading,isError}] = useSignupMutation()
+  const [createSignUp, { isLoading, isError }] = useSignupMutation();
   const navigate = useNavigate();
   const handleSubmit = async (
     values: FormValues,
     { setSubmitting }: FormikHelpers<FormValues>
   ) => {
-    const payload  = {
+    const payload = {
       name: values.name,
       email: values.email,
       password: values.password,
@@ -40,12 +42,13 @@ const SignUp: React.FC = () => {
       restaurant: values.restaurantName,
       branch: values.branchName,
       city: values.city,
-    }
-    await resAPI(createSignUp,payload,(data:any)=>{
-      setTimeout(()=>{
-        navigate("/Dashboard")
-      },3000)
-  })
+      usertype:values.type,
+    };
+    await resAPI(createSignUp, payload, (data: any) => {
+      setTimeout(() => {
+        navigate("/Dashboard");
+      }, 3000);
+    });
 
     console.log(values, "values");
     setSubmitting(false);
@@ -89,6 +92,7 @@ const SignUp: React.FC = () => {
             restaurantName: "",
             branchName: "",
             city: "",
+            type: "",
             submit: null,
           }}
           validationSchema={Yup.object().shape({
@@ -108,6 +112,7 @@ const SignUp: React.FC = () => {
               .max(255)
               .required("Branch Name is required"),
             city: Yup.string().max(255).required("City is required"),
+            type: Yup.string().required("User Type is required"),
           })}
           onSubmit={handleSubmit}
         >
@@ -226,6 +231,26 @@ const SignUp: React.FC = () => {
               {touched.password && errors.password && (
                 <FormHelperText error id="helper-text-password-signup">
                   {errors.password}
+                </FormHelperText>
+              )}
+              <Select
+                fullWidth
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={values.type}
+                onChange={handleChange}
+                name="type"
+                placeholder="UserType"
+                sx={{ mt: 2, bgcolor: "#e3d6b0" }}
+                error={Boolean(touched.type && errors.type)}
+              >
+                <MenuItem value={"owner"}>Owner</MenuItem>
+                <MenuItem value={"admin"}>Admin</MenuItem>
+                <MenuItem value={"manager"}>Manager</MenuItem>
+              </Select>
+              {touched.type && errors.type && (
+                <FormHelperText error id="helper-text-password-signup">
+                  {errors.type}
                 </FormHelperText>
               )}
               <Button

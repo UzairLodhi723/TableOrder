@@ -1,15 +1,20 @@
 import type { Theme, SxProps, Breakpoint } from "@mui/material/styles";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import { Main } from "./main";
 import { layoutClasses } from "../../utils/exportes";
-import { Navigation } from "../../routes/Navigation";
+import {
+  Navigation,
+  NavigationAdmin,
+  Navigationmanager,
+} from "../../routes/Navigation";
 import { MenuButton } from "../menu-button";
 import { LayoutSection } from "../Layout/MainLayout";
 import { HeaderSection } from "./header-section";
 import { NavDesktop, NavMobile } from "../Sidebar/Sidebar";
 import { _notifications } from "../../utils/_mock";
+import { useGetUserQuery } from "../../store/rtk";
 
 export type DashboardLayoutProps = {
   sx?: SxProps<Theme>;
@@ -23,17 +28,29 @@ export function DashboardLayout({
   children,
   header,
 }: DashboardLayoutProps) {
+    const {data} = useGetUserQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+      const [user,setUser] = useState<any>(null)
+      console.log(user,"user")
+      useEffect(()=>{
+        if(data && data.user){
+          setUser(data?.user)
+        }
+      },[data])
   const theme = useTheme();
   const [navOpen, setNavOpen] = useState(false);
 
   const layoutQuery: Breakpoint = "lg";
+  const type = "admin";
 
   return (
     <LayoutSection
       headerSection={
         <HeaderSection
           layoutQuery={layoutQuery}
-          sx={{...header?.sx, [theme.breakpoints.up(layoutQuery)]: { display: "none" } }}
+          sx={{
+            ...header?.sx,
+            [theme.breakpoints.up(layoutQuery)]: { display: "none" },
+          }}
           slots={{
             leftArea: (
               <Fragment>
@@ -45,7 +62,7 @@ export function DashboardLayout({
                   }}
                 />
                 <NavMobile
-                  data={Navigation}
+                  data={user?.usertype == "owner" ? Navigation:user?.usertype == "admin"? NavigationAdmin : Navigationmanager}
                   open={navOpen}
                   onClose={() => setNavOpen(false)}
                 />
@@ -55,7 +72,10 @@ export function DashboardLayout({
         />
       }
       sidebarSection={
-        <NavDesktop data={Navigation} layoutQuery={layoutQuery} />
+        <NavDesktop
+        data={user?.usertype == "owner" ? Navigation:user?.usertype == "admin"? NavigationAdmin : Navigationmanager}
+          layoutQuery={layoutQuery}
+        />
       }
       footerSection={null}
       cssVars={{
@@ -71,7 +91,7 @@ export function DashboardLayout({
           },
         },
         ...sx,
-        bgcolor:"#fff",
+        bgcolor: "#fff",
       }}
     >
       <Main>{children}</Main>
