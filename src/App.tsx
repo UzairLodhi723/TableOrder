@@ -5,7 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ToastContainer } from "react-toastify";
 
 function App() {
-  // console.log = console.warn = console.error = () => {}
+  console.log = console.warn = console.error = () => {}
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ThemeProviders>
