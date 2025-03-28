@@ -25,8 +25,13 @@ const topSellingItems = [
       sales: 120,
     },
 ];
+interface TopSellingItemProps {
+  data?:any
+}
 
-const TopSellingItem = () => {
+const TopSellingItem:React.FC<TopSellingItemProps> = ({
+  data
+}) => {
   return (
     <Card
       sx={{
@@ -35,7 +40,9 @@ const TopSellingItem = () => {
         bgcolor: "#f4f4f4",
         boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
         border: "1px solid rgba(0, 0, 0, 0.2)",
-        p:2.2
+        p:2.2,
+        height:"53vh",
+        overflow:"auto",
       }}
     >
       {/* <CardContent > */}
@@ -46,7 +53,8 @@ const TopSellingItem = () => {
           The top ordered menu this week
         </span>
 
-        {topSellingItems.map((item, index) => (
+        {data?.topItems?.length>0 ?
+        data?.topItems.map((item:any, index:number) => (
           <Box
             key={index}
             sx={{
@@ -70,7 +78,11 @@ const TopSellingItem = () => {
               {item.sales}
             </Typography>
           </Box>
-        ))}
+        )):
+        <Typography  fontSize={16} fontWeight={600} display={"flex"} justifyContent={"center"} alignItems={"center"}  m={"auto"}>
+          No Items Found
+        </Typography>
+        }
       {/* </CardContent> */}
     </Card>
   );

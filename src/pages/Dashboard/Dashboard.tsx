@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -12,9 +12,23 @@ import CustomerMap from "../../component/DashboardCards/CustomerMap";
 import PieCharts from "../../component/DashboardCards/PieCharts";
 import UserAvatar from "../../component/UserAvatar/UserAvatar";
 import { NotificationsPopover } from "../../component/Navbar/notifications-popover";
+import { useGetAllOrdersQuery, useGetDashboardQuery } from "../../store/rtk";
 
 
 const Dashboard = () => {
+  const {data} = useGetDashboardQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+   const {data:OrderData} = useGetAllOrdersQuery(undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+    const [allorder,setAllOrder] = useState([])
+  const [DashboardData, setDashboardData] = useState(null)
+  useEffect(()=>{
+    if(data){
+      setDashboardData(data)
+    }
+    if(OrderData){
+    setAllOrder(OrderData)
+    }
+
+  },[data, OrderData])
   return (
     <Box sx={{ p: 3, bgcolor: "#fff", minHeight: "100vh" }}>
       <Grid
@@ -51,26 +65,26 @@ const Dashboard = () => {
       </Grid>
       {/* Metrics */}
       <Typography variant="h5" mb={2}> Dashboard</Typography>
-      <TopCards />
+      <TopCards data = {DashboardData}/>
       {/* Charts */}
       <Grid container spacing={3} sx={{ mt: 3 }}>
         <Grid size={{ xs: 12, md: 7.5 }}>
           <Typography variant="h6">Pie Chart</Typography>
           <Box sx={{ display: "flex" }}>
             <PieCharts
-              series={[81]}
+              series={[data?.totalorders?data?.totalorders:0]}
               name="Total Orders"
               color1="#dfd0a3"
               color2="#a67c00"
             />
             <PieCharts
-              series={[22]}
+              series={[data?.totalorders?data?.totalorders:0]}
               name="Customer Growth"
               color1="#cbcbcb"
               color2="#878686"
             />
             <PieCharts
-              series={[62]}
+              series={[data?.totalorders?data?.totalorders:0]}
               name="Total Revenue"
               color1="#a0bbb1"
               color2="#0a5239"
@@ -84,7 +98,7 @@ const Dashboard = () => {
             <Typography variant="h6" px={2}>
               Customer Map
             </Typography>
-            <CustomerMap />
+            <CustomerMap data = {DashboardData} />
           </Card>
         </Grid>
       </Grid>
@@ -92,10 +106,10 @@ const Dashboard = () => {
       {/* Order Report Table */}
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <OrderReport />
+          <OrderReport  data = {allorder}/>
         </Grid>
         <Grid size={{ xs: 12, md: 2.7 }}>
-          <TopSellingItem />
+          <TopSellingItem data={DashboardData} />
         </Grid>
       </Grid>
     </Box>

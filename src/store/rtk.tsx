@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // const BASE_URL = "http://192.168.18.240:5000/api/v1/";
 const BASE_URL = "http://34.28.168.5/order/api/v1/";
-export const Images_URL = "http://192.168.18.240:5000/public/";
+export const Images_URL = "http://34.28.168.5/order/public/";
 const endpoints = {
   register: "auth/register",
   login: "auth/login",
@@ -14,7 +14,9 @@ const endpoints = {
   order:"order",
   payment:"order/payment",
   user:"user/",
-  avatar:"user/avatar/"
+  avatar:"user/avatar/",
+  dashboard:"user/dashboard/",
+  analytics:"user/analytics/"
 };
 
 export const tableOder = createApi({
@@ -146,6 +148,14 @@ export const tableOder = createApi({
       query: () => endpoints.notification,
       providesTags : ["refetchAllnotification"],
     }),
+    // Dashboard
+    getDashboard:  builder.query({
+      query: () => endpoints.dashboard,
+    }),
+    // Analytics
+    getAnalytics:  builder.query({
+      query: () => endpoints.analytics,
+    }),
     // Order 
     addOrder: builder.mutation({
       query: (data) => ({
@@ -224,6 +234,10 @@ export const {
   useGetAllQRCodeQuery,
   useUpdateQRCodeMutation,
   useDeleteQRCodeMutation,
+  // Dashboard
+  useGetDashboardQuery,
+  // Analytics
+  useGetAnalyticsQuery,
   // Notification
   useAddNotificationMutation,
   useGetAllNotificationQuery,

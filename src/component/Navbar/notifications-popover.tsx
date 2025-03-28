@@ -71,7 +71,7 @@ export function NotificationsPopover({
         onClick={handleOpenPopover}
         {...other}
       >
-      <TopIcons icon="notifications" count={4}/>
+      <TopIcons icon="notifications" count={notifications?.length}/>
       </IconButton>
 
       <Popover

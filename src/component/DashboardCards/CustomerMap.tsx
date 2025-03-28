@@ -2,17 +2,28 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
+interface CustomerMapProps {
+  data?:any
+}
 
-
-const CustomerMap = () => {
+const CustomerMap:React.FC<CustomerMapProps> = ({
+  data
+}) => {
   const [state, setState] = React.useState<{
     series: ApexAxisChartSeries;
     options: ApexOptions;
   }>({
     series: [
       {
-        data: [60, 80, 35, 60, 70, 25, 63],
-       
+        data: [
+          data?.weeklyLogs?.Sunday?data?.weeklyLogs?.Sunday:0,
+          data?.weeklyLogs?.Monday?data?.weeklyLogs?.Monday:0, 
+          data?.weeklyLogs?.Tuesday?data?.weeklyLogs?.Tuesday:0, 
+          data?.weeklyLogs?.Wednesday?data?.weeklyLogs?.Wednesday:0, 
+          data?.weeklyLogs?.Thursday?data?.weeklyLogs?.Thursday:0, 
+          data?.weeklyLogs?.Friday?data?.weeklyLogs?.Friday:0, 
+          data?.weeklyLogs?.Saturday?data?.weeklyLogs?.Saturday:0
+        ],
       },
     ],
     

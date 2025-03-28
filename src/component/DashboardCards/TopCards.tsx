@@ -6,25 +6,30 @@ import {
 import Grid from "@mui/material/Grid2";
 import { Card, Typography } from '@mui/material';
 import { Box } from '@mui/material';
-const TopCards = () => {
+interface TopCardsProps {
+  data?:any
+}
+const TopCards:React.FC<TopCardsProps> = ({
+  data
+}) => {
     const cardData = [
         {
           icon: <DashboardTotalOrders />,
           label: "Total Orders",
-          value: 175,
-          percentage: 4,
+          value: data?.totalorders,
+          percentage: 0,
         },
         {
           icon: <DashboardOrdersPerDay />,
-          label: "Order Per Day",
-          value: 65,
-          percentage: 25,
+          label: "Today's Orders",
+          value: data?.todayOrders,
+          percentage: 0,
         },
         {
           icon: <DashboardRevnue />,
           label: "Total Revenue",
-          value: "57k PKR",
-          percentage: 25,
+          value: data?.totalRevenue+"PKR",
+          percentage: 0,
         },
       ];
   return (

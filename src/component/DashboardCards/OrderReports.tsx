@@ -74,10 +74,16 @@ const orderReports = [
     date: "2021-10-10",
   },
 ];
+interface Props{
+  data?:any
+}
 
-export default function OrderReport() {
+const OrderReport:React.FC<Props> = ({
+  data
+}) => 
+ {
 const [openRange, setOpenRange] = useState<boolean>(false);
-const [orderReport, setOrderReport] = useState(orderReports);
+const [orderReport, setOrderReport] = useState(data);
 const [startDate, setStartDate] = useState<Date | null>(null);
 const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -209,7 +215,7 @@ const handleDateApply = () => {
           </Typography>
           :
         <TableBody >
-          {orderReport.map((row, index) => (
+          {orderReport.map((row:any, index:number) => (
             <TableRow
               key={index}
               sx={{
@@ -218,13 +224,13 @@ const handleDateApply = () => {
               }}
             >
               <TableCell sx={{ borderBottom: "5px solid #f4f4f4" }}>
-                {row.table}
+              Table No {row?.table_no}
               </TableCell>
               <TableCell sx={{ borderBottom: "5px solid #f4f4f4" }}>
-                {row.menu}
+                {row.order_detail}
               </TableCell>
               <TableCell sx={{ borderBottom: "5px solid #f4f4f4" }}>
-                {row.price}
+                {row.amount}
               </TableCell>
               <TableCell sx={{ borderBottom: "5px solid #f4f4f4" }}>
                 <Box
@@ -252,3 +258,4 @@ const handleDateApply = () => {
     </Card>
   );
 }
+export default OrderReport

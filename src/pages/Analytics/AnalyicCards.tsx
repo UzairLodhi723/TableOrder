@@ -7,35 +7,45 @@ import {
   MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { useGetAnalyticsQuery } from "../../store/rtk";
 
-const Overview = [
-  {
-    heading1: "Today's",
-    heading2: "Orders",
-    data: 23,
-  },
-  {
-    heading1: "Today's",
-    heading2: "Cancel Orders",
-    data: 13,
-  },
-  {
-    heading1: "Total",
-    heading2: "Customers",
-    data: 60,
-  },
-  {
-    heading1: "Total",
-    heading2: "Reserve Tables",
-    data: 10,
-  },
-];
 
 const AnalyicCards = () => {
+  const {data} = useGetAnalyticsQuery (undefined,{"refetchOnFocus":true,"refetchOnReconnect":true,"refetchOnMountOrArgChange":true})
+  const [AnalyticsData, setAnalyticsData] = useState(null)
+  useEffect(()=>{
+    if(data){
+      setAnalyticsData(data)
+    }
+  },[data])
+  console.log(AnalyticsData,"AnalyticsData")
+  const Overview = [
+    {
+      heading1: "Today's",
+      heading2: "Orders",
+      data: data?.today_Order,
+    },
+    {
+      heading1: "Tota",
+      heading2: "Orders",
+      data: data?.total_orders      ,
+    },
+    {
+      heading1: "Total",
+      heading2: "Customers",
+      data: data?.total_customer,
+    },
+    {
+      heading1: "Total",
+      heading2: "Revenue",
+      data: data?.totalRevenue,
+    },
+  ];
+  
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -75,6 +85,8 @@ const AnalyicCards = () => {
         "Dec",
         "Jan",
         "Feb",
+        "Mar",
+        "Apr"
       ],
     },
     stroke: {
@@ -85,7 +97,19 @@ const AnalyicCards = () => {
   const chartSeries = [
     {
       name: "Customers",
-      data: [80, 70, 90, 60, 100, 85, 78, 80, 92, 88],
+      data: [data?.customer_Map?.May?data?.customer_Map?.May:0,
+        data?.customer_Map?.June?data?.customer_Map?.June:0,
+        data?.customer_Map?.July?data?.customer_Map?.July:0,
+        data?.customer_Map?.August?data?.customer_Map?.August:0,
+        data?.customer_Map?.September?data?.customer_Map?.September:0,
+        data?.customer_Map?.October?data?.customer_Map?.October:0,
+        data?.customer_Map?.November?data?.customer_Map?.November:0,
+        data?.customer_Map?.December?data?.customer_Map?.December:0,
+        data?.customer_Map?.January?data?.customer_Map?.January:0,
+        data?.customer_Map?.February?data?.customer_Map?.February:0,
+        data?.customer_Map?.March?data?.customer_Map?.March:0,
+        data?.customer_Map?.April?data?.customer_Map?.April:0,
+         ],
     },
   ];
 
@@ -290,7 +314,7 @@ const AnalyicCards = () => {
                   },
                   labels: ["Successful"],
                 }}
-                series={[80]}
+                series={[0]}
                 type="radialBar"
                 height={280}
               />
@@ -336,15 +360,15 @@ const AnalyicCards = () => {
             >
               <Typography variant="h6">Customer Map</Typography>
               <Box>
-                <Typography
+                {/* <Typography
                   component="span"
                   sx={{ borderBottom: "2px solid #94792e", cursor: "pointer" }}
                 >
                   Yearly
-                </Typography>
-                <IconButton onClick={handleMenuOpen}>
+                </Typography> */}
+                {/* <IconButton onClick={handleMenuOpen}>
                   <MoreVertIcon />
-                </IconButton>
+                </IconButton> */}
                 <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
                   <MenuItem onClick={handleMenuClose}>Monthly</MenuItem>
                   <MenuItem onClick={handleMenuClose}>Weekly</MenuItem>
