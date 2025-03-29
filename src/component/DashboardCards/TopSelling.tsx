@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography, Box, Avatar } from "@mui/material";
+import { Images_URL } from "../../store/rtk";
 const topSelling1 = require("../../Assets/Images/topSelling1.jpeg");
 const topSelling2 = require("../../Assets/Images/topSelling2.jpeg");
 const topSelling3 = require("../../Assets/Images/topSelling3.jpeg");
@@ -32,6 +33,8 @@ interface TopSellingItemProps {
 const TopSellingItem:React.FC<TopSellingItemProps> = ({
   data
 }) => {
+   const imageUrl = `${Images_URL}menu/dish/`;
+  
   return (
     <Card
       sx={{
@@ -66,7 +69,7 @@ const TopSellingItem:React.FC<TopSellingItemProps> = ({
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
-                src={item?.image}
+                src={ imageUrl+item?.dishimage}
                 alt={item?.name}
                 sx={{ width: 40, height: 40, mr: 1 }}
               />

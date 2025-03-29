@@ -72,19 +72,19 @@ const Dashboard = () => {
           <Typography variant="h6">Pie Chart</Typography>
           <Box sx={{ display: "flex" }}>
             <PieCharts
-              series={[data?.totalorders?data?.totalorders:0]}
+              series={[data?.totalorders?parseFloat(((Number(data?.totalorders) / 1000) * 100).toFixed(2)):0]}
               name="Total Orders"
               color1="#dfd0a3"
               color2="#a67c00"
             />
             <PieCharts
-              series={[data?.totalorders?data?.totalorders:0]}
+              series={[data?.todayOrders?data?.todayOrders:0]}
               name="Customer Growth"
               color1="#cbcbcb"
               color2="#878686"
             />
             <PieCharts
-              series={[data?.totalorders?data?.totalorders:0]}
+              series={[data?.totalRevenue?(data?.totalRevenue/100000)*100:0]}
               name="Total Revenue"
               color1="#a0bbb1"
               color2="#0a5239"

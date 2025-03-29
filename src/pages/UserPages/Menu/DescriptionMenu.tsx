@@ -25,7 +25,7 @@ const DescriptionMenu = () => {
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
   const { state } = useLocation();
-  console.log(state)
+  console.log(state?.dishimage,"state")
   const [selectedData, setSelectedData] = useState<any[]>([]);
 
   const handleIncrement = () => setCount(count + 1);
@@ -79,7 +79,7 @@ const DescriptionMenu = () => {
           <CardMedia
             component="img"
             height="240px"
-            image={imageUrl + state.image}
+            image={imageUrl + state.dishimage}
             alt="Burger"
           />
         </Card>
@@ -163,7 +163,7 @@ const DescriptionMenu = () => {
                   }}
                 >
                   <Avatar
-                    src={item?.image}
+                    src={item?.dishimage}
                     alt={"Add Ons"}
                     sx={{ height: 80, width: 80 }}
                   />

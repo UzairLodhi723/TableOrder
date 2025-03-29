@@ -48,7 +48,7 @@ const ViewQRDetails: React.FC<ORprops> = ({ data, setOpen }) => {
       img.src = 'data:image/svg+xml;base64,' + btoa(svg);
     }
   };
-   const userId = `http://192.168.18.203:3000/splash/${data.table_no}`
+   const userId = `http://192.168.18.240:3000/splash/${data.table_no}`
 
   return (
     <Box

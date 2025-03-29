@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
@@ -9,21 +9,14 @@ interface CustomerMapProps {
 const CustomerMap:React.FC<CustomerMapProps> = ({
   data
 }) => {
+  const [stateData,setStateData]= React.useState<any>(null)
   const [state, setState] = React.useState<{
     series: ApexAxisChartSeries;
     options: ApexOptions;
   }>({
     series: [
       {
-        data: [
-          data?.weeklyLogs?.Sunday?data?.weeklyLogs?.Sunday:0,
-          data?.weeklyLogs?.Monday?data?.weeklyLogs?.Monday:0, 
-          data?.weeklyLogs?.Tuesday?data?.weeklyLogs?.Tuesday:0, 
-          data?.weeklyLogs?.Wednesday?data?.weeklyLogs?.Wednesday:0, 
-          data?.weeklyLogs?.Thursday?data?.weeklyLogs?.Thursday:0, 
-          data?.weeklyLogs?.Friday?data?.weeklyLogs?.Friday:0, 
-          data?.weeklyLogs?.Saturday?data?.weeklyLogs?.Saturday:0
-        ],
+        data: [],
       },
     ],
     
@@ -86,7 +79,28 @@ const CustomerMap:React.FC<CustomerMapProps> = ({
       },
     },
   });
-
+  useEffect(()=>{
+    if(data && data.weeklyLogs){
+      setStateData(data?.weeklyLogs)
+      setState((prevState) => ({
+        ...prevState,
+        series: [
+          {
+            data: [
+              data?.weeklyLogs?.Sunday || 0,
+              data?.weeklyLogs?.Monday || 0,
+              data?.weeklyLogs?.Tuesday || 0,
+              data?.weeklyLogs?.Wednesday || 0,
+              data?.weeklyLogs?.Thursday || 0,
+              data?.weeklyLogs?.Friday || 0,
+              data?.weeklyLogs?.Saturday || 0,
+            ],
+          },
+        ],
+      }));
+    }
+  },[data])
+  console.log("customer ", data)
   return (
     <div id="chart" style={{backgroundColor:"#ECECEC"}}>
       <ReactApexChart

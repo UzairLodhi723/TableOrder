@@ -101,7 +101,7 @@ const TopCards:React.FC<TopCardsProps> = ({
                     fontWeight: 500,
                   }}
                 >
-                  &#x2191; {item.percentage}% (30 days)
+                  {/* &#x2191; {item.percentage}% (30 days) */}
                 </Typography>
               </Box>
             </Box>

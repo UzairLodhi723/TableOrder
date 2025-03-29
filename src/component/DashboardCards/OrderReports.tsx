@@ -82,14 +82,17 @@ const OrderReport:React.FC<Props> = ({
   data
 }) => 
  {
-const [openRange, setOpenRange] = useState<boolean>(false);
-const [orderReport, setOrderReport] = useState(data);
-const [startDate, setStartDate] = useState<Date | null>(null);
-const [endDate, setEndDate] = useState<Date | null>(null);
-
+   const [openRange, setOpenRange] = useState<boolean>(false);
+   const [orderReport, setOrderReport] = useState<any>([]);
+   const [startDate, setStartDate] = useState<Date | null>(null);
+   const [endDate, setEndDate] = useState<Date | null>(null);
+console.log("orderData",data)
 useEffect(() => {
+  if(data && data?.orderlist){
+    setOrderReport(data?.orderlist)
+  }
   handleDateApply();
-}, [startDate]);
+}, [startDate,data]);
 
 const handleDateSelect = (start: Date, end: Date) => {
   setStartDate(start);
